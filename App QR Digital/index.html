@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carnet Digital</title>
+  <!-- Librerías QR -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+  <!-- Fuentes -->
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <!-- Estilos -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- ══ HEADER ══ -->
+  <header>
+    <h1>Carnet <span>Digital</span></h1>
+    <p>Sistema de Identificación con QR · 2025</p>
+  </header>
+
+  <!-- ══ TABS ══ -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('generar', this)">⊞ Generar</button>
+    <button class="tab-btn"        onclick="switchTab('escanear', this)">⊡ Escanear</button>
+  </div>
+
+  <!-- ══ PANEL: GENERAR ══ -->
+  <div class="panel active" id="panel-generar">
+
+    <div class="form-card">
+      <div class="form-group">
+        <label>Código</label>
+        <input type="text" id="inp-codigo" placeholder="Ej: 2024-001234" maxlength="20">
+      </div>
+      <div class="form-group">
+        <label>Nombre completo</label>
+        <input type="text" id="inp-nombre" placeholder="Ej: María García López">
+      </div>
+      <div class="form-group">
+        <label>Programa</label>
+        <input type="text" id="inp-programa" placeholder="Ej: Ingeniería de Sistemas">
+      </div>
+      <button class="btn-generate" onclick="generarCarnet()">Generar Carnet Digital</button>
+    </div>
+
+    <!-- Carnet generado -->
+    <div id="carnet-output">
+      <div class="carnet">
+
+        <div class="carnet-header">
+          <div class="inst-name">Universidad Nacional</div>
+          <div class="carnet-title">Carnet Estudiantil</div>
+          <div class="carnet-year" id="carnet-vigencia"></div>
+        </div>
+        <div class="stripe"></div>
+
+        <div class="carnet-body">
+          <div class="avatar" id="carnet-avatar">?</div>
+          <div class="carnet-info">
+            <div class="field-label">Nombre</div>
+            <div class="field-value"    id="carnet-nombre">—</div>
+            <div class="field-label">Código</div>
+            <div class="field-value code" id="carnet-codigo">—</div>
+            <div class="field-label">Programa</div>
+            <div class="field-value program" id="carnet-programa">—</div>
+          </div>
+        </div>
+
+        <div class="carnet-qr-section">
+          <div class="qr-info">
+            <strong>🔒 QR Verificable</strong>
+            <p>Escanea el código para<br>verificar la identidad<br>del portador.</p>
+          </div>
+          <div id="qrcode-display"></div>
+        </div>
+
+        <div class="carnet-footer">
+          <span class="status-badge"><span class="status-dot"></span>Activo</span>
+          <span class="carnet-id-small" id="carnet-id-mini"></span>
+        </div>
+
+      </div><!-- /.carnet -->
+
+      <div class="qr-string-box">
+        <p>🔗 String codificado en QR</p>
+        <code id="qr-string-value"></code>
+      </div>
+    </div><!-- /#carnet-output -->
+
+  </div><!-- /#panel-generar -->
+
+  <!-- ══ PANEL: ESCANEAR ══ -->
+  <div class="panel" id="panel-escanear">
+
+    <div class="scan-card">
+      <div class="scan-icon">📷</div>
+      <h2>Escanear Carnet</h2>
+      <p>Apunta la cámara al código QR del carnet para verificar la identidad.</p>
+
+      <div id="reader"></div>
+
+      <button class="btn-scan" id="btn-start-scan" onclick="iniciarScan()">
+        Iniciar Cámara y Escanear
+      </button>
+      <button class="btn-stop" id="btn-stop-scan" onclick="detenerScan()">
+        Detener Cámara
+      </button>
+
+      <!-- Entrada manual -->
+      <div class="manual-section">
+        <p>— o ingresa el string QR manualmente —</p>
+        <div class="manual-input-row">
+          <input type="text" id="manual-qr" placeholder="Nombre|Codigo|Carrera">
+          <button class="btn-parse" onclick="parsearManual()">Parsear</button>
+        </div>
+      </div>
+
+      <div class="error-msg" id="scan-error"></div>
+    </div>
+
+    <!-- Resultado del escaneo -->
+    <div id="scan-result">
+      <div class="result-card">
+
+        <div class="result-header">
+          <div class="check-icon">✓</div>
+          <div class="result-header-text">
+            <h3>Carnet Verificado</h3>
+            <p>Identidad leída correctamente</p>
+          </div>
+        </div>
+
+        <div class="result-body">
+          <div class="result-avatar" id="result-avatar">?</div>
+          <div class="result-fields">
+            <div class="result-field">
+              <div class="result-field-icon">👤</div>
+              <div class="result-field-content">
+                <div class="result-field-label">Nombre</div>
+                <div class="result-field-value" id="result-nombre">—</div>
+              </div>
+            </div>
+            <div class="result-field">
+              <div class="result-field-icon">🔑</div>
+              <div class="result-field-content">
+                <div class="result-field-label">Código</div>
+                <div class="result-field-value" id="result-codigo">—</div>
+              </div>
+            </div>
+            <div class="result-field">
+              <div class="result-field-icon">🎓</div>
+              <div class="result-field-content">
+                <div class="result-field-label">Programa</div>
+                <div class="result-field-value" id="result-programa">—</div>
+              </div>
+            </div>
+          </div>
+          <div class="result-raw" id="result-raw"></div>
+        </div>
+
+      </div><!-- /.result-card -->
+    </div><!-- /#scan-result -->
+
+  </div><!-- /#panel-escanear -->
+
+  <!-- Script -->
+  <script src="app.js"></script>
+</body>
+</html>
