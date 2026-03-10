@@ -1,4 +1,5 @@
 
+
 const BASE_URL = 'https://diegosarmientoalean.github.io/App-Qr-Digital';
 
 
@@ -49,18 +50,33 @@ function generarCarnet() {
   // Mostrar la URL generada
   document.getElementById('qr-string-value').textContent = qrURL;
 
-  // ── Generar imagen QR con qrcode.js ──
+  // ── QR pequeño en el carnet (decorativo) ──
   const qrDiv = document.getElementById('qrcode-display');
   qrDiv.innerHTML = '';
-
   new QRCode(qrDiv, {
-    text:         qrURL,
-    width:        80,
-    height:       80,
-    colorDark:    '#0a1628',
-    colorLight:   '#ffffff',
-    correctLevel: QRCode.CorrectLevel.H
+    text: qrURL, width: 80, height: 80,
+    colorDark: '#0a1628', colorLight: '#ffffff',
+    correctLevel: QRCode.CorrectLevel.M
   });
+
+  // ── QR GRANDE para escanear con celular ──
+  const qrGrande = document.getElementById('qrcode-grande');
+  qrGrande.innerHTML = '';
+  new QRCode(qrGrande, {
+    text: qrURL, width: 256, height: 256,
+    colorDark: '#0a1628', colorLight: '#ffffff',
+    correctLevel: QRCode.CorrectLevel.M
+  });
+
+  // Botón descargar QR
+  setTimeout(() => {
+    const canvas = qrGrande.querySelector('canvas');
+    if (canvas) {
+      document.getElementById('btn-download-qr').href = canvas.toDataURL('image/png');
+    }
+  }, 300);
+
+  document.getElementById('qr-grande-section').classList.add('visible');
 
   // Mostrar carnet
   const output = document.getElementById('carnet-output');
@@ -127,7 +143,7 @@ function procesarQR(texto) {
 
   let nombre, codigo, programa;
 
-  // Detectar si es URL con parámetros
+
   try {
     const url    = new URL(texto);
     const params = url.searchParams;
@@ -162,7 +178,6 @@ function procesarQR(texto) {
   resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
-
 function parsearManual() {
   const valor = document.getElementById('manual-qr').value.trim();
   if (!valor) {
@@ -194,5 +209,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 });
+
 
 
