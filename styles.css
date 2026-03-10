@@ -1,6 +1,4 @@
-/* ═══════════════════════════════════════════
-   CARNET DIGITAL — styles.css
-   ═══════════════════════════════════════════ */
+
 
 *, *::before, *::after {
   box-sizing: border-box;
@@ -8,7 +6,7 @@
   padding: 0;
 }
 
-/* ── VARIABLES ── */
+
 :root {
   --navy:    #0a1628;
   --blue:    #1a3a6e;
@@ -603,3 +601,58 @@ header p {
   transition: all 0.2s;
 }
 .btn-parse:hover { transform: translateY(-1px); }
+
+/* ── QR GRANDE ── */
+.qr-grande-section {
+  display: none;
+  padding: 1.5rem;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  background: #f8faff;
+}
+.qr-grande-section.visible { display: block; }
+.qr-grande-section p {
+  font-size: 0.72rem;
+  color: var(--muted);
+  margin-bottom: 1rem;
+  font-family: 'Syne', sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+#qrcode-grande {
+  display: inline-block;
+  padding: 12px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+  margin-bottom: 1rem;
+}
+#qrcode-grande canvas,
+#qrcode-grande img {
+  width: 256px !important;
+  height: 256px !important;
+  display: block;
+  border-radius: 8px;
+}
+.btn-download-qr {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.5rem;
+  background: var(--navy);
+  border: none;
+  border-radius: 10px;
+  font-family: 'Syne', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+.btn-download-qr:hover {
+  background: var(--blue);
+  transform: translateY(-1px);
+}
+
