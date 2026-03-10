@@ -1,18 +1,21 @@
 
+
+const BASE_URL = 'https://github.com/DiegoSarmientoAlean/App-Qr-Digital';
+
+/* ────────────────────────────────────────────
+   TABS
+   ──────────────────────────────────────────── */
 function switchTab(tab, btn) {
-  // Ocultar todos los paneles y desactivar todos los botones
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-
-  // Activar panel y botón seleccionados
   document.getElementById('panel-' + tab).classList.add('active');
   btn.classList.add('active');
-
-  // Detener escáner si se sale del panel de escaneo
   if (tab !== 'escanear') detenerScan();
 }
 
-
+/* ────────────────────────────────────────────
+   GENERAR CARNET + QR (URL-based)
+   ──────────────────────────────────────────── */
 function generarCarnet() {
   const nombre   = document.getElementById('inp-nombre').value.trim();
   const codigo   = document.getElementById('inp-codigo').value.trim();
@@ -24,51 +27,62 @@ function generarCarnet() {
   }
 
   // Iniciales para el avatar
-  const partes   = nombre.split(' ');
+  const partes    = nombre.split(' ');
   const iniciales = (partes[0][0] + (partes[1] ? partes[1][0] : '')).toUpperCase();
 
-  // Actualizar datos del carnet
-  document.getElementById('carnet-nombre').textContent  = nombre;
-  document.getElementById('carnet-codigo').textContent  = codigo;
+  // Actualizar datos del carnet visual
+  document.getElementById('carnet-nombre').textContent   = nombre;
+  document.getElementById('carnet-codigo').textContent   = codigo;
   document.getElementById('carnet-programa').textContent = programa;
-  document.getElementById('carnet-avatar').textContent  = iniciales;
-  document.getElementById('carnet-id-mini').textContent = 'ID: ' + codigo;
+  document.getElementById('carnet-avatar').textContent   = iniciales;
+  document.getElementById('carnet-id-mini').textContent  = 'ID: ' + codigo;
 
-  const año = new Date().getFullYear();
-  document.getElementById('carnet-vigencia').textContent = `Vigencia: ${año} – ${año + 1}`;
+  const anio = new Date().getFullYear();
+  document.getElementById('carnet-vigencia').textContent = `Vigencia: ${anio} – ${anio + 1}`;
 
-  // ── Construir string QR: Nombre|Codigo|Carrera ──
-  const qrString = `${nombre}|${codigo}|${programa}`;
-  document.getElementById('qr-string-value').textContent = qrString;
+  // ── Construir URL que irá dentro del QR ──
+  // Al escanear, el celular abre: carnet.html?nombre=...&codigo=...&programa=...
+  const params = new URLSearchParams({ nombre, codigo, programa });
+
+  // Si BASE_URL está vacío, detectar la ruta actual automáticamente
+  let base = BASE_URL;
+  if (!base) {
+    base = window.location.href.replace(/index\.html.*$/, '').replace(/\/$/, '');
+  }
+  const qrURL = `${base}/carnet.html?${params.toString()}`;
+
+  // Mostrar la URL generada
+  document.getElementById('qr-string-value').textContent = qrURL;
 
   // ── Generar imagen QR con qrcode.js ──
   const qrDiv = document.getElementById('qrcode-display');
-  qrDiv.innerHTML = ''; // limpiar QR anterior
+  qrDiv.innerHTML = '';
 
   new QRCode(qrDiv, {
-    text:           qrString,
-    width:          80,
-    height:         80,
-    colorDark:      '#0a1628',
-    colorLight:     '#ffffff',
-    correctLevel:   QRCode.CorrectLevel.H
+    text:         qrURL,
+    width:        80,
+    height:       80,
+    colorDark:    '#0a1628',
+    colorLight:   '#ffffff',
+    correctLevel: QRCode.CorrectLevel.H
   });
 
-  // Mostrar carnet y hacer scroll suave
+  // Mostrar carnet
   const output = document.getElementById('carnet-output');
   output.style.display = 'block';
   output.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
-
-let html5QrCode  = null;
+/* ────────────────────────────────────────────
+   ESCANEAR QR CON CÁMARA (html5-qrcode)
+   ──────────────────────────────────────────── */
+let html5QrCode   = null;
 let scannerActivo = false;
 
 function iniciarScan() {
   ocultarError();
   document.getElementById('scan-result').style.display = 'none';
 
-  // Instanciar escáner si no existe
   if (!html5QrCode) {
     html5QrCode = new Html5Qrcode('reader');
   }
@@ -79,19 +93,16 @@ function iniciarScan() {
         mostrarError('No se encontró cámara en este dispositivo.');
         return;
       }
-
-      // Preferir cámara trasera (última de la lista en la mayoría de dispositivos)
       const camId = cameras[cameras.length - 1].id;
 
       html5QrCode.start(
         camId,
         { fps: 10, qrbox: { width: 240, height: 240 } },
         (decodedText) => {
-          // QR detectado: parsear y detener cámara
           procesarQR(decodedText);
           detenerScan();
         },
-        () => { /* errores de frame ignorados */ }
+        () => {}
       )
       .then(() => {
         scannerActivo = true;
@@ -100,7 +111,7 @@ function iniciarScan() {
       })
       .catch(err => {
         mostrarError('No se pudo acceder a la cámara. Verifica los permisos o usa el campo manual.');
-        console.error('html5QrCode.start error:', err);
+        console.error(err);
       });
     })
     .catch(() => {
@@ -118,55 +129,62 @@ function detenerScan() {
 }
 
 /* ────────────────────────────────────────────
-   PARSEAR STRING QR → Nombre|Codigo|Carrera
+   PARSEAR QR → puede ser URL o texto plano
    ──────────────────────────────────────────── */
 function procesarQR(texto) {
   ocultarError();
 
-  const partes = texto.split('|');
+  let nombre, codigo, programa;
 
-  if (partes.length < 3) {
-    mostrarError('QR inválido. Formato esperado: Nombre|Codigo|Carrera');
+  // Detectar si es URL con parámetros
+  try {
+    const url    = new URL(texto);
+    const params = url.searchParams;
+    nombre   = params.get('nombre');
+    codigo   = params.get('codigo');
+    programa = params.get('programa');
+  } catch (e) {
+    // No es URL: intentar formato texto plano Nombre|Codigo|Carrera
+    const partes = texto.split('|');
+    if (partes.length >= 3) {
+      [nombre, codigo, programa] = partes;
+    }
+  }
+
+  if (!nombre || !codigo || !programa) {
+    mostrarError('QR inválido. Debe ser una URL de carnet o el formato Nombre|Codigo|Carrera');
     return;
   }
 
-  const [nombre, codigo, programa] = partes;
-
-  // Generar iniciales para el avatar
   const iniciales = nombre
-    .split(' ')
-    .slice(0, 2)
-    .map(p => p[0] || '')
-    .join('')
-    .toUpperCase() || '?';
+    .split(' ').slice(0, 2)
+    .map(p => p[0] || '').join('').toUpperCase() || '?';
 
-  // Mostrar datos parseados
-  document.getElementById('result-nombre').textContent  = nombre  || '—';
-  document.getElementById('result-codigo').textContent  = codigo  || '—';
-  document.getElementById('result-programa').textContent = programa || '—';
-  document.getElementById('result-avatar').textContent  = iniciales;
-  document.getElementById('result-raw').textContent     = '🔗 ' + texto;
+  document.getElementById('result-nombre').textContent   = nombre;
+  document.getElementById('result-codigo').textContent   = codigo;
+  document.getElementById('result-programa').textContent = programa;
+  document.getElementById('result-avatar').textContent   = iniciales;
+  document.getElementById('result-raw').textContent      = '🔗 ' + texto;
 
-  // Animar y mostrar resultado
   const resultDiv = document.getElementById('scan-result');
   resultDiv.style.display = 'block';
   resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
 /* ────────────────────────────────────────────
-   PARSEAR MANUALMENTE (campo de texto)
+   PARSEAR MANUALMENTE
    ──────────────────────────────────────────── */
 function parsearManual() {
   const valor = document.getElementById('manual-qr').value.trim();
   if (!valor) {
-    mostrarError('Ingresa un string QR para parsear. Ej: Nombre|Codigo|Carrera');
+    mostrarError('Ingresa un string QR para parsear.');
     return;
   }
   procesarQR(valor);
 }
 
 /* ────────────────────────────────────────────
-   HELPERS: mensajes de error
+   HELPERS
    ──────────────────────────────────────────── */
 function mostrarError(msg) {
   const el = document.getElementById('scan-error');
@@ -182,12 +200,9 @@ function ocultarError() {
    EVENT LISTENERS
    ──────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
-  // Enter en campo manual de escaneo
   document.getElementById('manual-qr').addEventListener('keydown', e => {
     if (e.key === 'Enter') parsearManual();
   });
-
-  // Enter en campos del formulario de generación
   ['inp-nombre', 'inp-codigo', 'inp-programa'].forEach(id => {
     document.getElementById(id).addEventListener('keydown', e => {
       if (e.key === 'Enter') generarCarnet();
