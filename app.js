@@ -1,5 +1,5 @@
 
-const BASE_URL = 'https://diegosarmientolean.github.io/App-Qr-Digital/App%20QR%20Digital';
+const BASE_URL = 'https://diegosarmientoalean.github.io/App-Qr-Digital/';
 
 
 function switchTab(tab, btn) {
@@ -194,3 +194,4 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 });
+
