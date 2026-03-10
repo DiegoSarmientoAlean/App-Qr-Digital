@@ -1,10 +1,7 @@
 
+const BASE_URL = 'https://diegosarmientolean.github.io/App-Qr-Digital/App%20QR%20Digital';
 
-const BASE_URL = 'https://github.com/DiegoSarmientoAlean/App-Qr-Digital';
 
-/* ────────────────────────────────────────────
-   TABS
-   ──────────────────────────────────────────── */
 function switchTab(tab, btn) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -13,9 +10,7 @@ function switchTab(tab, btn) {
   if (tab !== 'escanear') detenerScan();
 }
 
-/* ────────────────────────────────────────────
-   GENERAR CARNET + QR (URL-based)
-   ──────────────────────────────────────────── */
+
 function generarCarnet() {
   const nombre   = document.getElementById('inp-nombre').value.trim();
   const codigo   = document.getElementById('inp-codigo').value.trim();
@@ -73,9 +68,7 @@ function generarCarnet() {
   output.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
-/* ────────────────────────────────────────────
-   ESCANEAR QR CON CÁMARA (html5-qrcode)
-   ──────────────────────────────────────────── */
+
 let html5QrCode   = null;
 let scannerActivo = false;
 
@@ -128,9 +121,7 @@ function detenerScan() {
   document.getElementById('btn-stop-scan').classList.remove('visible');
 }
 
-/* ────────────────────────────────────────────
-   PARSEAR QR → puede ser URL o texto plano
-   ──────────────────────────────────────────── */
+
 function procesarQR(texto) {
   ocultarError();
 
@@ -171,9 +162,7 @@ function procesarQR(texto) {
   resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
-/* ────────────────────────────────────────────
-   PARSEAR MANUALMENTE
-   ──────────────────────────────────────────── */
+
 function parsearManual() {
   const valor = document.getElementById('manual-qr').value.trim();
   if (!valor) {
@@ -183,9 +172,7 @@ function parsearManual() {
   procesarQR(valor);
 }
 
-/* ────────────────────────────────────────────
-   HELPERS
-   ──────────────────────────────────────────── */
+
 function mostrarError(msg) {
   const el = document.getElementById('scan-error');
   el.textContent = '⚠ ' + msg;
@@ -196,9 +183,7 @@ function ocultarError() {
   document.getElementById('scan-error').classList.remove('visible');
 }
 
-/* ────────────────────────────────────────────
-   EVENT LISTENERS
-   ──────────────────────────────────────────── */
+
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('manual-qr').addEventListener('keydown', e => {
     if (e.key === 'Enter') parsearManual();
