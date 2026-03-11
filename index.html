@@ -10,13 +10,12 @@
 </head>
 <body>
 
-  <!-- ══ HEADER ══ -->
   <header>
-    <h1>Carnet <span>Digital</span></h1>
-    <p>Unisalamanca · Sistema de Identificación con QR</p>
+    <div class="logo-uni">Uni<span>Salamanca</span></div>
+    <div class="logo-corp">Corporación Universitaria Empresarial</div>
+    <div class="logo-tagline">Sistema de Identificación con QR</div>
   </header>
 
-  <!-- ══ FORMULARIO ══ -->
   <div class="panel active" id="panel-generar">
 
     <div class="form-card" id="form-section">
@@ -35,10 +34,7 @@
       <button class="btn-generate" onclick="generarCarnet()">Generar Carnet Digital</button>
     </div>
 
-    <!-- Solo QR tras generar -->
     <div id="carnet-output">
-
-      <!-- QR Grande centrado -->
       <div class="qr-grande-section" id="qr-grande-section">
         <div class="qr-label">
           <span class="qr-name-badge" id="qr-name-badge"></span>
@@ -51,13 +47,11 @@
         </div>
       </div>
 
-      <!-- String URL (colapsado, útil para debug) -->
       <div class="qr-string-box">
         <p>🔗 URL codificada en el QR</p>
         <code id="qr-string-value"></code>
       </div>
 
-      <!-- Carnet completo OCULTO (solo para referencia interna, no se muestra) -->
       <div style="display:none">
         <div id="carnet-avatar"></div>
         <div id="carnet-nombre"></div>
@@ -67,11 +61,11 @@
         <div id="carnet-id-mini"></div>
         <div id="qrcode-display"></div>
       </div>
+    </div>
 
-    </div><!-- /#carnet-output -->
-
-  </div><!-- /#panel-generar -->
+  </div>
 
   <script src="app.js"></script>
 </body>
 </html>
+
