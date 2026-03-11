@@ -3,45 +3,41 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Carnet Digital</title>
+  <title>Carnet Digital · Unisalamanca</title>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --navy:    #0a1628;
-      --blue:    #1a3a6e;
-      --accent:  #e8b84b;
-      --accent2: #4a9eff;
-      --muted:   #6b7a9a;
-      --border:  #d0daf0;
-      --success: #22c55e;
+      --cyan-dark:  #0369a1;
+      --cyan:       #0ea5e9;
+      --cyan-light: #38bdf8;
+      --off-white:  #f0f9ff;
+      --muted:      #64748b;
+      --border:     #bae6fd;
+      --success:    #22c55e;
+      --text-dark:  #0c1a2e;
     }
-
     body {
       font-family: 'DM Sans', sans-serif;
-      background: var(--navy);
+      background: linear-gradient(160deg, #0ea5e9 0%, #0284c7 50%, #075985 100%);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       padding: 1.5rem 1rem;
-      background-image:
-        radial-gradient(ellipse 80% 50% at 20% 10%, rgba(74,158,255,0.12) 0%, transparent 60%),
-        radial-gradient(ellipse 60% 40% at 80% 80%, rgba(232,184,75,0.08) 0%, transparent 60%);
     }
 
-    /* ── VERIFIED BADGE ── */
+    /* Verified */
     .verified-banner {
       display: flex;
       align-items: center;
       gap: 0.6rem;
-      background: rgba(34,197,94,0.15);
-      border: 1px solid rgba(34,197,94,0.35);
+      background: rgba(34,197,94,0.12);
+      border: 1px solid rgba(34,197,94,0.3);
       border-radius: 100px;
-      padding: 0.5rem 1.2rem;
-      margin-bottom: 1.5rem;
+      padding: 0.45rem 1.2rem;
+      margin-bottom: 1.4rem;
       animation: fadeIn 0.5s ease;
     }
     .verified-dot {
@@ -50,165 +46,161 @@
       background: var(--success);
       animation: pulse 2s infinite;
     }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50%       { opacity: 0.5; transform: scale(1.4); }
-    }
     .verified-banner span {
       font-family: 'Syne', sans-serif;
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       font-weight: 700;
       color: var(--success);
       letter-spacing: 1px;
       text-transform: uppercase;
     }
+    @keyframes pulse {
+      0%,100%{opacity:1;transform:scale(1)}
+      50%{opacity:.5;transform:scale(1.4)}
+    }
+    @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+    @keyframes slideUp {
+      from{transform:translateY(30px);opacity:0}
+      to{transform:translateY(0);opacity:1}
+    }
 
-    /* ── CARNET ── */
+    /* Carnet */
     .carnet {
       width: 100%;
       max-width: 380px;
       background: #fff;
       border-radius: 24px;
       overflow: hidden;
-      box-shadow: 0 30px 80px rgba(0,0,0,0.5);
-      animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    @keyframes slideUp {
-      from { transform: translateY(30px); opacity: 0; }
-      to   { transform: translateY(0);    opacity: 1; }
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to   { opacity: 1; }
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.2),
+        0 30px 80px rgba(0,0,0,0.3);
+      animation: slideUp 0.5s cubic-bezier(0.16,1,0.3,1);
     }
 
-    /* Header */
+    /* Carnet header */
     .carnet-header {
-      background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
-      padding: 1.6rem 1.8rem 1.2rem;
+      background: linear-gradient(135deg, #0284c7 0%, #0ea5e9 70%);
+      padding: 1.4rem 1.6rem 1.1rem;
       position: relative;
       overflow: hidden;
     }
     .carnet-header::before {
-      content: '';
-      position: absolute;
-      top: -40px; right: -40px;
-      width: 160px; height: 160px;
-      border-radius: 50%;
-      background: rgba(232,184,75,0.1);
+      content:''; position:absolute;
+      top:-35px; right:-35px;
+      width:130px; height:130px;
+      border-radius:50%;
+      background:rgba(255,255,255,0.08);
     }
     .carnet-header::after {
-      content: '';
-      position: absolute;
-      bottom: -30px; left: 35%;
-      width: 240px; height: 80px;
-      border-radius: 50%;
-      background: rgba(74,158,255,0.08);
+      content:''; position:absolute;
+      bottom:-20px; left:30%;
+      width:200px; height:60px;
+      border-radius:50%;
+      background:rgba(255,255,255,0.06);
     }
-    .inst-row {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      position: relative;
-      z-index: 1;
-    }
-    .inst-logo {
-      width: 28px; height: 28px;
-      border-radius: 6px;
-      background: var(--accent);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 0.9rem;
-    }
-    .inst-name {
+
+    /* Logo en carnet */
+    .carnet-logo { position:relative; z-index:1; margin-bottom:0.5rem; overflow:hidden; }
+    .carnet-logo .uni {
       font-family: 'Syne', sans-serif;
-      font-size: 0.65rem;
-      font-weight: 700;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.7);
+      font-size: 1rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.3px;
+      line-height: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
+    .carnet-logo .uni span { color: rgba(255,255,255,0.55); }
+    .carnet-logo .corp {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.48rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.4);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-top: 0.1rem;
+    }
+
     .carnet-title {
       font-family: 'Syne', sans-serif;
-      font-size: 1.3rem;
+      font-size: 1.2rem;
       font-weight: 800;
       color: #fff;
       position: relative;
       z-index: 1;
-      margin-top: 0.5rem;
-      letter-spacing: -0.3px;
     }
-    .carnet-subtitle {
-      font-size: 0.75rem;
-      color: rgba(255,255,255,0.45);
+    .carnet-sub {
+      font-size: 0.7rem;
+      color: rgba(255,255,255,0.5);
       position: relative;
       z-index: 1;
-      margin-top: 0.2rem;
+      margin-top: 0.15rem;
     }
 
     /* Stripe */
     .stripe {
-      height: 5px;
-      background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent));
+      height: 4px;
+      background: linear-gradient(90deg, var(--cyan-light), #fff 50%, var(--cyan-light));
     }
 
     /* Body */
     .carnet-body {
-      padding: 1.6rem 1.8rem;
+      padding: 1.4rem 1.6rem;
       display: flex;
-      gap: 1.2rem;
+      gap: 1.1rem;
       align-items: center;
     }
     .avatar {
-      width: 80px; height: 80px;
-      border-radius: 16px;
-      background: linear-gradient(135deg, var(--blue), var(--accent2));
+      width: 72px; height: 72px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--cyan), var(--cyan-light));
       display: flex; align-items: center; justify-content: center;
       font-family: 'Syne', sans-serif;
-      font-size: 1.8rem;
+      font-size: 1.6rem;
       font-weight: 800;
       color: #fff;
       flex-shrink: 0;
-      box-shadow: 0 8px 24px rgba(26,58,110,0.3);
+      box-shadow: 0 6px 20px rgba(14,165,233,0.35);
       text-transform: uppercase;
-      letter-spacing: -1px;
     }
     .info-block { flex: 1; }
-
-    .field { margin-bottom: 0.8rem; }
+    .field { margin-bottom: 0.75rem; }
     .field:last-child { margin-bottom: 0; }
     .field-label {
-      font-size: 0.6rem;
+      font-size: 0.58rem;
       font-weight: 500;
       color: var(--muted);
       text-transform: uppercase;
       letter-spacing: 1.2px;
-      margin-bottom: 0.15rem;
+      margin-bottom: 0.12rem;
     }
     .field-value {
       font-family: 'Syne', sans-serif;
-      font-size: 1rem;
+      font-size: 0.95rem;
       font-weight: 700;
-      color: var(--navy);
+      color: var(--text-dark);
       line-height: 1.2;
     }
     .field-value.code {
-      font-size: 0.88rem;
-      color: var(--blue);
-      letter-spacing: 0.8px;
+      font-size: 0.85rem;
+      color: var(--cyan-dark);
+      letter-spacing: 0.5px;
     }
     .field-value.program {
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       font-weight: 600;
-      color: var(--muted);
+      color: var(--cyan-dark);
       font-family: 'DM Sans', sans-serif;
-      line-height: 1.3;
+      opacity: 0.8;
     }
 
     /* Footer */
     .carnet-footer {
       border-top: 1px solid var(--border);
-      background: #f8faff;
-      padding: 0.9rem 1.8rem;
+      background: var(--off-white);
+      padding: 0.8rem 1.6rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -218,87 +210,64 @@
       align-items: center;
       gap: 0.4rem;
       font-family: 'Syne', sans-serif;
-      font-size: 0.68rem;
+      font-size: 0.65rem;
       font-weight: 700;
       color: var(--success);
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
     .status-dot {
-      width: 7px; height: 7px;
+      width: 6px; height: 6px;
       border-radius: 50%;
       background: var(--success);
       animation: pulse 2s infinite;
     }
-    .vigencia {
-      font-size: 0.68rem;
-      color: var(--muted);
-      font-family: 'DM Sans', sans-serif;
-    }
+    .vigencia { font-size: 0.65rem; color: var(--muted); }
 
-    /* ── ERROR ── */
-    .error-state {
-      display: none;
-      text-align: center;
-      padding: 2rem;
-    }
-    .error-state.visible { display: block; }
-    .error-icon { font-size: 3rem; margin-bottom: 1rem; }
+    /* Error */
+    .error-state { display:none; text-align:center; padding:2rem; }
+    .error-state.visible { display:block; }
     .error-state h2 {
-      font-family: 'Syne', sans-serif;
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: #fff;
-      margin-bottom: 0.5rem;
+      font-family:'Syne',sans-serif;
+      font-size:1.1rem; font-weight:700;
+      color:#fff; margin-bottom:0.5rem;
     }
-    .error-state p {
-      color: rgba(255,255,255,0.5);
-      font-size: 0.85rem;
-    }
+    .error-state p { color:rgba(255,255,255,0.5); font-size:0.85rem; }
 
-    /* ── BACK LINK ── */
-    .back-link {
-      margin-top: 1.5rem;
-      text-align: center;
-    }
+    /* Back */
+    .back-link { margin-top:1.5rem; text-align:center; }
     .back-link a {
-      color: rgba(255,255,255,0.4);
-      font-size: 0.8rem;
-      text-decoration: none;
-      font-family: 'Syne', sans-serif;
-      letter-spacing: 0.5px;
-      transition: color 0.2s;
+      color:rgba(255,255,255,0.35);
+      font-size:0.78rem; text-decoration:none;
+      font-family:'Syne',sans-serif;
+      transition:color 0.2s;
     }
-    .back-link a:hover { color: var(--accent); }
+    .back-link a:hover { color:#fff; }
   </style>
 </head>
 <body>
 
-  <!-- Error state (oculto por defecto) -->
   <div class="error-state" id="error-state">
-    <div class="error-icon">⚠️</div>
+    <div style="font-size:3rem;margin-bottom:1rem">⚠️</div>
     <h2>QR Inválido</h2>
     <p>Este código no contiene datos de carnet válidos.</p>
   </div>
 
-  <!-- Verified banner -->
   <div class="verified-banner" id="verified-banner">
     <div class="verified-dot"></div>
     <span>✓ Carnet Verificado</span>
   </div>
 
-  <!-- Carnet -->
   <div class="carnet" id="carnet">
     <div class="carnet-header">
-      <div class="inst-row">
-        <div class="inst-logo">🎓</div>
-        <div class="inst-name">Unisalamanca</div>
+      <div class="carnet-logo">
+        <div class="uni">Uni<span>Salamanca</span></div>
+        <div class="corp">Corporación Universitaria Empresarial</div>
       </div>
       <div class="carnet-title">Carnet Estudiantil</div>
-      <div class="carnet-subtitle" id="vigencia-text"></div>
+      <div class="carnet-sub" id="vigencia-text"></div>
     </div>
     <div class="stripe"></div>
-
     <div class="carnet-body">
       <div class="avatar" id="avatar-text">?</div>
       <div class="info-block">
@@ -316,7 +285,6 @@
         </div>
       </div>
     </div>
-
     <div class="carnet-footer">
       <span class="status-badge"><span class="status-dot"></span>Activo</span>
       <span class="vigencia" id="vigencia-footer"></span>
@@ -328,38 +296,31 @@
   </div>
 
   <script>
-    // Leer parámetros de la URL
-    const params  = new URLSearchParams(window.location.search);
-    const nombre  = params.get('nombre');
-    const codigo  = params.get('codigo');
+    const params   = new URLSearchParams(window.location.search);
+    const nombre   = params.get('nombre');
+    const codigo   = params.get('codigo');
     const programa = params.get('programa');
 
     if (!nombre || !codigo || !programa) {
-      // Mostrar error y ocultar carnet
       document.getElementById('error-state').classList.add('visible');
       document.getElementById('verified-banner').style.display = 'none';
       document.getElementById('carnet').style.display = 'none';
     } else {
-      // Iniciales para avatar
       const partes    = nombre.split(' ');
       const iniciales = (partes[0][0] + (partes[1] ? partes[1][0] : '')).toUpperCase();
+      const anio      = new Date().getFullYear();
+      const vigencia  = `Vigencia: ${anio} – ${anio + 1}`;
 
-      // Vigencia
-      const anio = new Date().getFullYear();
-      const vigencia = `Vigencia: ${anio} – ${anio + 1}`;
-
-      // Rellenar datos
-      document.getElementById('val-nombre').textContent   = nombre;
-      document.getElementById('val-codigo').textContent   = codigo;
-      document.getElementById('val-programa').textContent = programa;
-      document.getElementById('avatar-text').textContent  = iniciales;
+      document.getElementById('val-nombre').textContent    = nombre;
+      document.getElementById('val-codigo').textContent    = codigo;
+      document.getElementById('val-programa').textContent  = programa;
+      document.getElementById('avatar-text').textContent   = iniciales;
       document.getElementById('vigencia-text').textContent = vigencia;
       document.getElementById('vigencia-footer').textContent = vigencia;
-
-      // Título de la pestaña
-      document.title = `Carnet — ${nombre}`;
+      document.title = `Carnet · ${nombre} · Unisalamanca`;
     }
   </script>
 </body>
 </html>
+
 
