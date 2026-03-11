@@ -2,7 +2,6 @@
 
 const BASE_URL = 'https://diegosarmientoalean.github.io/App-Qr-Digital';
 
-
 function generarCarnet() {
   const nombre   = document.getElementById('inp-nombre').value.trim();
   const codigo   = document.getElementById('inp-codigo').value.trim();
@@ -13,7 +12,7 @@ function generarCarnet() {
     return;
   }
 
- 
+
   const params = new URLSearchParams({ nombre, codigo, programa });
   const base   = BASE_URL || window.location.href.replace(/index\.html.*$/, '').replace(/\/$/, '');
   const qrURL  = `${base}/carnet.html?${params.toString()}`;
@@ -23,7 +22,7 @@ function generarCarnet() {
 
   document.getElementById('qr-name-badge').textContent = nombre + ' · ' + codigo;
 
- 
+
   const qrGrande = document.getElementById('qrcode-grande');
   qrGrande.innerHTML = '';
   new QRCode(qrGrande, {
@@ -35,7 +34,7 @@ function generarCarnet() {
     correctLevel: QRCode.CorrectLevel.M
   });
 
-  
+ 
   setTimeout(() => {
     const canvas = qrGrande.querySelector('canvas');
     if (canvas) {
@@ -43,7 +42,7 @@ function generarCarnet() {
     }
   }, 300);
 
- 
+  // Ocultar formulario, mostrar QR
   document.getElementById('form-section').style.display = 'none';
   const output = document.getElementById('carnet-output');
   output.style.display = 'block';
@@ -51,19 +50,17 @@ function generarCarnet() {
   output.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
-
 function nuevoCarnet() {
-  
+
   document.getElementById('inp-nombre').value  = '';
   document.getElementById('inp-codigo').value  = '';
   document.getElementById('inp-programa').value = '';
 
-
+  
   document.getElementById('carnet-output').style.display = 'none';
   document.getElementById('qr-grande-section').classList.remove('visible');
   document.getElementById('form-section').style.display = 'block';
 
- 
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -75,6 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 });
+
 
 
 
